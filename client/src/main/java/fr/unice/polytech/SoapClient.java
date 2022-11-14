@@ -62,8 +62,4 @@ public class SoapClient extends WebServiceGatewaySupport {
         return divide(intA, intB).getDivideResult();
     }
 
-    public Object callWebService(String url, Object request) {
-        return getWebServiceTemplate().marshalSendAndReceive(url, request);
-    }
-
 }
