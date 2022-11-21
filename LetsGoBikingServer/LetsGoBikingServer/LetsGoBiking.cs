@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LetsGoBikingServer
 {
@@ -17,26 +13,29 @@ namespace LetsGoBikingServer
         private static readonly HttpClient Client = new HttpClient();
 
         private static readonly string JCDECEAUX_API_KEY = "8863c86d9599db3b8533179acd4d9ad54d52f975";
-        /*public string GetItinerary(string origin, string destination)
-        {
-            return callAPI();
-        */
 
         public string GetItinerary(string origin, string destination)
         {
-            return CallApi();
+            Address o = CallORSSearchAPI(origin);
+            Address d = CallORSSearchAPI(destination);
+            return o.ToString() + "\n" + d.ToString();
         }
 
-        private static string CallApi()
+        private static Address CallORSSearchAPI(string addr)
         {
-            var response = Client
-                .GetAsync("http://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json")
-                .Result;
+            Client.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
+            var response = Client.GetAsync("https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&text=" + addr).Result;
             response.EnsureSuccessStatusCode();
             var responseBody = response.Content.ReadAsStringAsync().Result;
-            var jsonParsed = JArray.Parse(responseBody);
-            Console.WriteLine(jsonParsed.ToString());
-            return jsonParsed.ToString();
+            var jsonParsed = JObject.Parse(responseBody);
+            var features = JObject.Parse(responseBody.ToString()).GetValue("features")[0];
+            var propert = JObject.Parse(features.ToString()).GetValue("properties");
+            var geometry = JObject.Parse(features.ToString()).GetValue("geometry");
+            var ville = JObject.Parse(propert.ToString()).GetValue("locality");
+            var coord = JObject.Parse(geometry.ToString()).GetValue("coordinates");
+            GeoCoordinate geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
+            Address address = new Address(ville.ToString(), geoCoordinate);
+            return address;
         }
 
         public CompositeType GetDataUsingDataContract(CompositeType composite)
