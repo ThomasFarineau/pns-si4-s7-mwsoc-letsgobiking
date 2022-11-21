@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import static fr.unice.polytech.CONST.SERVER_URI;
+
 @SpringBootApplication
 @Slf4j
 public class Application {
@@ -27,7 +29,7 @@ public class Application {
     @Bean
     public SoapClient soapClient(Jaxb2Marshaller marshaller) {
         SoapClient client = new SoapClient();
-        client.setDefaultUri("http://dneonline.com/calculator.asmx");
+        client.setDefaultUri(SERVER_URI);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
         return client;
@@ -36,14 +38,7 @@ public class Application {
     @Bean
     CommandLineRunner lookup(SoapClient client) {
         return args -> {
-            int r = client.iAdd(3, 5);
-            log.info("3 + 5 = " + r);
-            r = client.iSubtract(3, 5);
-            log.info("3 - 5 = " + r);
-            r = client.iMultiply(3, 5);
-            log.info("3 * 5 = " + r);
-            r = client.iDivide(3, 5);
-            log.info("3 / 5 = " + r);
+            log.info("GetItineraryResponse: " + client.getItinerary("Paris", "Lyon"));
         };
     }
 

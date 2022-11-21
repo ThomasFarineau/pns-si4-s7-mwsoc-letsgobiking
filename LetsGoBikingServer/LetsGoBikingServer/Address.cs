@@ -15,8 +15,7 @@ namespace LetsGoBikingServer
             this.city = city;
             this.geoCoordinate = geoCoordinate;
         }
-
-        public string toString()
+        public override string ToString()
         {
             return city + " " + geoCoordinate.ToString();
         }

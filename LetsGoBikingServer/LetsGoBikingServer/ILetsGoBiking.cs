@@ -9,42 +9,10 @@ using System.Threading.Tasks;
 
 namespace LetsGoBikingServer
 {
-    // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom d'interface "IService1" à la fois dans le code et le fichier de configuration.
     [ServiceContract]
     public interface ILetsGoBiking
     {
         [OperationContract]
         string GetItinerary(string origin, string destination);
-
-        //[OperationContract]
-        //string GetItinerary(string origin, string destination);
-
-        [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        // TODO: ajoutez vos opérations de service ici
-    }
-
-    // Utilisez un contrat de données comme indiqué dans l'exemple ci-après pour ajouter les types composites aux opérations de service.
-    // Vous pouvez ajouter des fichiers XSD au projet. Une fois le projet généré, vous pouvez utiliser directement les types de données qui y sont définis, avec l'espace de noms "LetsGoBikingServer.ContractType".
-    [DataContract]
-    public class CompositeType
-    {
-        private bool boolValue = true;
-        private string stringValue = "Hello ";
-
-        [DataMember]
-        public bool BoolValue
-        {
-            get => boolValue;
-            set => boolValue = value;
-        }
-
-        [DataMember]
-        public string StringValue
-        {
-            get => stringValue;
-            set => stringValue = value;
-        }
     }
 }

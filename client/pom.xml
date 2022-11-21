@@ -78,7 +78,7 @@
                     <generatePackage>fr.unice.polytech.server</generatePackage>
                     <schemas>
                         <schema>
-                            <url>http://dneonline.com/calculator.asmx?wsdl</url>
+                            <url>http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ILetsGoBiking/?wsdl</url>
                         </schema>
                     </schemas>
                 </configuration>

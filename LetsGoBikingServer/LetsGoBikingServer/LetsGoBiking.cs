@@ -16,15 +16,20 @@ namespace LetsGoBikingServer
 
         public string GetItinerary(string origin, string destination)
         {
-            Address o = CallORSSearchAPI(origin);
-            Address d = CallORSSearchAPI(destination);
-            return o.ToString() + "\n" + d.ToString();
+            Console.WriteLine("test");
+            var o = CallOrsSearchApi(origin);
+            var d = CallOrsSearchApi(destination);
+            return o + "\n" + d;
         }
 
-        private static Address CallORSSearchAPI(string addr)
+        private static Address CallOrsSearchApi(string addr)
         {
+            /*
             Client.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
-            var response = Client.GetAsync("https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&text=" + addr).Result;
+            var response = Client
+                .GetAsync(
+                    "https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&text=" +
+                    addr).Result;
             response.EnsureSuccessStatusCode();
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var jsonParsed = JObject.Parse(responseBody);
@@ -33,18 +38,12 @@ namespace LetsGoBikingServer
             var geometry = JObject.Parse(features.ToString()).GetValue("geometry");
             var ville = JObject.Parse(propert.ToString()).GetValue("locality");
             var coord = JObject.Parse(geometry.ToString()).GetValue("coordinates");
-            GeoCoordinate geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
-            Address address = new Address(ville.ToString(), geoCoordinate);
+            var geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
+            var address = new Address(ville.ToString(), geoCoordinate);
             return address;
+            */
+            return new Address("Paris", new GeoCoordinate(48.856614, 2.3522219));
         }
-
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-        {
-            if (composite == null) throw new ArgumentNullException("composite");
-            if (composite.BoolValue) composite.StringValue += "Suffix";
-            return composite;
-        }
-
 
         public GeoCoordinate[] GetClosestStation(Address origin, Address destination)
         {
@@ -56,21 +55,17 @@ namespace LetsGoBikingServer
             if (stations.Count == 0) throw new Exception("No station found");
 
             var closest = new GeoCoordinate[2];
-            
+
             closest[0] = stations[0].geoCoordinate;
             closest[1] = stations[0].geoCoordinate;
             foreach (var station in stations)
             {
-                if (station.geoCoordinate.GetDistanceTo(origin.geoCoordinate) < closest[0].GetDistanceTo(origin.geoCoordinate))
-                {
-                    closest[0] = station.geoCoordinate;
-                }
-                if (station.geoCoordinate.GetDistanceTo(destination.geoCoordinate) < closest[1].GetDistanceTo(destination.geoCoordinate))
-                {
-                    closest[1] = station.geoCoordinate;
-                }
+                if (station.geoCoordinate.GetDistanceTo(origin.geoCoordinate) <
+                    closest[0].GetDistanceTo(origin.geoCoordinate)) closest[0] = station.geoCoordinate;
+                if (station.geoCoordinate.GetDistanceTo(destination.geoCoordinate) <
+                    closest[1].GetDistanceTo(destination.geoCoordinate)) closest[1] = station.geoCoordinate;
             }
-            
+
             Console.WriteLine("Closest station to origin: " + closest[0]);
             Console.WriteLine("Closest station to destination: " + closest[1]);
             return closest;
@@ -81,7 +76,8 @@ namespace LetsGoBikingServer
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(
                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            var response = client.GetAsync("https://api.jcdecaux.com/vls/v3/stations?apiKey=" + JCDECEAUX_API_KEY).Result;
+            var response = client.GetAsync("https://api.jcdecaux.com/vls/v3/stations?apiKey=" + JCDECEAUX_API_KEY)
+                .Result;
             response.EnsureSuccessStatusCode();
             var responseBody = response.Content.ReadAsStringAsync().Result;
             var jsonParsed = JArray.Parse(responseBody);
