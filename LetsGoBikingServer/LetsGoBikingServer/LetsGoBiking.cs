@@ -13,22 +13,22 @@ namespace LetsGoBikingServer
     // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom de classe "Service1" à la fois dans le code et le fichier de configuration.
     public class LetsGoBiking : ILetsGoBiking
     {
-        static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
         /*public string GetItinerary(string origin, string destination)
         {
             return callAPI();
         */
 
-        public async Task<string> GetItinerary(string origin, string destination)
+        public string GetItinerary(string origin, string destination)
         {
-            return await callAPI();
+            return CallApi();
         }
 
-        static async Task<string> callAPI()
+        private static string CallApi()
         {
-            HttpResponseMessage response = await client.GetAsync("http://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json");
+            var response = Client.GetAsync("http://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json").Result;
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            var responseBody = response.Content.ReadAsStringAsync().Result;
             var jsonParsed = JArray.Parse(responseBody);
             Console.WriteLine(jsonParsed.ToString());
             return jsonParsed.ToString();

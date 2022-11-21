@@ -13,7 +13,7 @@ namespace LetsGoBikingServer
     public interface ILetsGoBiking
     {
         [OperationContract]
-        Task<string> GetItinerary(string origin, string destination);
+        string GetItinerary(string origin, string destination);
         
         //[OperationContract]
         //string GetItinerary(string origin, string destination);
