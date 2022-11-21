@@ -1,0 +1,10 @@
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\bin\Debug\LetsGoBikingServer.dll.config
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\bin\Debug\LetsGoBikingServer.dll
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\bin\Debug\LetsGoBikingServer.pdb
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\obj\Debug\LetsGoBikingServer.csproj.AssemblyReference.cache
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\obj\Debug\LetsGoBikingServer.csproj.CoreCompileInputs.cache
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\obj\Debug\LetsGoBikingServer.csproj.CopyComplete
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\obj\Debug\LetsGoBikingServer.dll
+C:\Users\Léo\Documents\SI4\MWSOC\polytech-mwsoc-letsgobiking\LetsGoBikingServer\LetsGoBikingServer\obj\Debug\LetsGoBikingServer.pdb
