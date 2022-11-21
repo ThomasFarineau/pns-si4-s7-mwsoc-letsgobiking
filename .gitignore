@@ -1,0 +1,7 @@
+LetsGoBikingServer/LetsGoBikingServer/bin/*
+LetsGoBikingServer/LetsGoBikingServer/obj/*
+LetsGoBikingServer/.vs
+LetsGoBikingServer/.idea
+.idea
+client/target
+

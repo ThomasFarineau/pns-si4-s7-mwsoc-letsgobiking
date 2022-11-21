@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -14,7 +15,7 @@ namespace LetsGoBikingServer
     {
         [OperationContract]
         string GetItinerary(string origin, string destination);
-        
+
         //[OperationContract]
         //string GetItinerary(string origin, string destination);
 
@@ -29,21 +30,21 @@ namespace LetsGoBikingServer
     [DataContract]
     public class CompositeType
     {
-        bool boolValue = true;
-        string stringValue = "Hello ";
+        private bool boolValue = true;
+        private string stringValue = "Hello ";
 
         [DataMember]
         public bool BoolValue
         {
-            get { return boolValue; }
-            set { boolValue = value; }
+            get => boolValue;
+            set => boolValue = value;
         }
 
         [DataMember]
         public string StringValue
         {
-            get { return stringValue; }
-            set { stringValue = value; }
+            get => stringValue;
+            set => stringValue = value;
         }
     }
 }
