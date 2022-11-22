@@ -16,7 +16,6 @@ namespace LetsGoBikingServer
 
         public string GetItinerary(string origin, string destination)
         {
-            Console.WriteLine("test");
             var o = CallOrsSearchApi(origin);
             var d = CallOrsSearchApi(destination);
             return o + "\n" + d;
@@ -24,7 +23,6 @@ namespace LetsGoBikingServer
 
         private static Address CallOrsSearchApi(string addr)
         {
-            /*
             Client.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
             var response = Client
                 .GetAsync(
@@ -41,8 +39,6 @@ namespace LetsGoBikingServer
             var geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
             var address = new Address(ville.ToString(), geoCoordinate);
             return address;
-            */
-            return new Address("Paris", new GeoCoordinate(48.856614, 2.3522219));
         }
 
         public GeoCoordinate[] GetClosestStation(Address origin, Address destination)
