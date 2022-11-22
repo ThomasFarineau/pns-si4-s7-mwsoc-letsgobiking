@@ -8,8 +8,8 @@ public class Application {
         LetsGoBiking letsGoBiking = new LetsGoBiking();
         ILetsGoBiking proxy = letsGoBiking.getBasicHttpBindingILetsGoBiking();
         String itinerary = proxy.getItinerary(
-                "4 rue Panait Istrati, 06000 Nice",
-                "181 bd de la Madeleine, 06000 Nice");
+                "2 Place de Paris, 69009 Lyon",
+                "Bd Jard. Zoologique, 13004 Marseille");
         System.out.println("itinerary: " + itinerary);
     }
 }

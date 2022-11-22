@@ -18,7 +18,8 @@ namespace LetsGoBikingServer
         {
             var o = CallOrsSearchApi(origin);
             var d = CallOrsSearchApi(destination);
-            return o + "\n" + d;
+            var station = GetClosestStation(o, d);
+            return station[0] + ";" + station[1];
         }
 
         private static Address CallOrsSearchApi(string addr)
