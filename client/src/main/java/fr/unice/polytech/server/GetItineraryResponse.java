@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="GetItineraryResult" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="GetItineraryResult" type="{http://schemas.microsoft.com/2003/10/Serialization/Arrays}ArrayOfstring" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,17 +36,17 @@ import javax.xml.bind.annotation.XmlType;
 public class GetItineraryResponse {
 
     @XmlElementRef(name = "GetItineraryResult", namespace = "http://tempuri.org/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> getItineraryResult;
+    protected JAXBElement<ArrayOfstring> getItineraryResult;
 
     /**
      * Obtient la valeur de la propriété getItineraryResult.
      * 
      * @return
      *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
      *     
      */
-    public JAXBElement<String> getGetItineraryResult() {
+    public JAXBElement<ArrayOfstring> getGetItineraryResult() {
         return getItineraryResult;
     }
 
@@ -55,10 +55,10 @@ public class GetItineraryResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
      *     
      */
-    public void setGetItineraryResult(JAXBElement<String> value) {
+    public void setGetItineraryResult(JAXBElement<ArrayOfstring> value) {
         this.getItineraryResult = value;
     }
 

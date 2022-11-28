@@ -28,13 +28,13 @@ public interface ILetsGoBiking {
      * @param origin
      * @param destination
      * @return
-     *     returns java.lang.String
+     *     returns fr.unice.polytech.server.ArrayOfstring
      */
     @WebMethod(operationName = "GetItinerary", action = "http://tempuri.org/ILetsGoBiking/GetItinerary")
     @WebResult(name = "GetItineraryResult", targetNamespace = "http://tempuri.org/")
     @RequestWrapper(localName = "GetItinerary", targetNamespace = "http://tempuri.org/", className = "fr.unice.polytech.server.GetItinerary")
     @ResponseWrapper(localName = "GetItineraryResponse", targetNamespace = "http://tempuri.org/", className = "fr.unice.polytech.server.GetItineraryResponse")
-    public String getItinerary(
+    public ArrayOfstring getItinerary(
         @WebParam(name = "origin", targetNamespace = "http://tempuri.org/")
         String origin,
         @WebParam(name = "destination", targetNamespace = "http://tempuri.org/")

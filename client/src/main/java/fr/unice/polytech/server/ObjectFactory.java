@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _ArrayOfstring_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/Arrays", "ArrayOfstring");
     private final static QName _AnyType_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "anyType");
     private final static QName _AnyURI_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "anyURI");
     private final static QName _Base64Binary_QNAME = new QName("http://schemas.microsoft.com/2003/10/Serialization/", "base64Binary");
@@ -74,6 +75,27 @@ public class ObjectFactory {
      */
     public GetItineraryResponse createGetItineraryResponse() {
         return new GetItineraryResponse();
+    }
+
+    /**
+     * Create an instance of {@link ArrayOfstring }
+     * 
+     */
+    public ArrayOfstring createArrayOfstring() {
+        return new ArrayOfstring();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", name = "ArrayOfstring")
+    public JAXBElement<ArrayOfstring> createArrayOfstring(ArrayOfstring value) {
+        return new JAXBElement<ArrayOfstring>(_ArrayOfstring_QNAME, ArrayOfstring.class, null, value);
     }
 
     /**
@@ -376,16 +398,16 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}
+     * Create an instance of {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
      * 
      * @param value
      *     Java instance representing xml element's value.
      * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     the new instance of {@link JAXBElement }{@code <}{@link ArrayOfstring }{@code >}
      */
     @XmlElementDecl(namespace = "http://tempuri.org/", name = "GetItineraryResult", scope = GetItineraryResponse.class)
-    public JAXBElement<String> createGetItineraryResponseGetItineraryResult(String value) {
-        return new JAXBElement<String>(_GetItineraryResponseGetItineraryResult_QNAME, String.class, GetItineraryResponse.class, value);
+    public JAXBElement<ArrayOfstring> createGetItineraryResponseGetItineraryResult(ArrayOfstring value) {
+        return new JAXBElement<ArrayOfstring>(_GetItineraryResponseGetItineraryResult_QNAME, ArrayOfstring.class, GetItineraryResponse.class, value);
     }
 
 }
