@@ -12,14 +12,51 @@ namespace LetsGoBikingServer
     {
         private static readonly HttpClient Client = new HttpClient();
 
+        private static readonly HttpClient InstructionsClient = new HttpClient();
+
         private static readonly string JCDECEAUX_API_KEY = "8863c86d9599db3b8533179acd4d9ad54d52f975";
 
-        public string GetItinerary(string origin, string destination)
+        public string[] GetItinerary(string origin, string destination)
         {
             var o = CallOrsSearchApi(origin);
             var d = CallOrsSearchApi(destination);
             var station = GetClosestStation(o, d);
-            return station[0] + ";" + station[1];
+            var instructions = GetInstructions(o, d, station);
+            return instructions;
+        }
+
+        private static string[] GetInstructions(Address o, Address d, GeoCoordinate[] station)
+        {
+            List<string> instructions = new List<string>();
+            instructions.AddRange(GetInstructionsFromTo(new GeoCoordinate[] {o.geoCoordinate, station[0] }, "foot-walking"));
+            instructions.AddRange(GetInstructionsFromTo(new GeoCoordinate[] { station[0], station[1] }, "cycling-regular"));
+            instructions.AddRange(GetInstructionsFromTo(new GeoCoordinate[] { station[1], d.geoCoordinate }, "foot-walking"));
+            return instructions.ToArray();
+        }
+
+        private static List<string> GetInstructionsFromTo(GeoCoordinate[] coordinates, string profile)
+        {
+            List<string> instructions = new List<string>();
+            InstructionsClient.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
+            var response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile + "?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&start=" +
+                getLongitudeLatitude(coordinates[0]) + "&end=" + getLongitudeLatitude(coordinates[1])).Result;
+            response.EnsureSuccessStatusCode();
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            var jsonParsed = JObject.Parse(responseBody);
+            var features = JObject.Parse(responseBody.ToString()).GetValue("features")[0];
+            var propert = JObject.Parse(features.ToString()).GetValue("properties");
+            var segments = JObject.Parse(propert.ToString()).GetValue("segments")[0];
+            var steps = JObject.Parse(segments.ToString()).GetValue("steps");
+            foreach (JObject step in steps)
+            {
+                instructions.Add(step.GetValue("instruction").ToString() + "§" + step.GetValue("distance").ToString());
+            }
+            return instructions;
+        } 
+
+        private static string getLongitudeLatitude(GeoCoordinate g)
+        {
+            return g.Longitude.ToString().Replace(',', '.') + "," + g.Latitude.ToString().Replace(",", ".");
         }
 
         private static Address CallOrsSearchApi(string addr)

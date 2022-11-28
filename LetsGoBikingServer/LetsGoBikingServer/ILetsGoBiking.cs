@@ -13,6 +13,6 @@ namespace LetsGoBikingServer
     public interface ILetsGoBiking
     {
         [OperationContract]
-        string GetItinerary(string origin, string destination);
+        string[] GetItinerary(string origin, string destination);
     }
 }
