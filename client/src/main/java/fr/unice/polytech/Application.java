@@ -1,8 +1,10 @@
 package fr.unice.polytech;
 
+import fr.unice.polytech.map.MapViewer;
 import fr.unice.polytech.server.ArrayOfstring;
 import fr.unice.polytech.server.ILetsGoBiking;
 import fr.unice.polytech.server.LetsGoBiking;
+import org.jxmapviewer.viewer.GeoPosition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +16,50 @@ public class Application {
     static Logger logger = Logger.getLogger(Application.class.getName());
 
     public static void main(String[] args) {
+
+        if (!isUptime()) {
+            logger.severe("Server is down");
+            System.exit(1);
+        }
+
         LetsGoBiking letsGoBiking = new LetsGoBiking();
         ILetsGoBiking proxy = letsGoBiking.getBasicHttpBindingILetsGoBiking();
 
-        String originAddress = askForAddress("origin");
-        String destinationAddress = askForAddress("destination");
-
         //2 Place de Paris, 69009 Lyon
         //1 Bd Jard. Zoologique, 13004 Marseille
+        /*
+        String originAddress = askForAddress("origin");
+        String destinationAddress = askForAddress("destination");
+        */
+
+        String originAddress = askForAddress("origin", "2 Place de Paris, 69009 Lyon");
+        String destinationAddress = askForAddress("destination", "2 rue Saint Pierre de Vaise, 69009 Lyon");
+
 
         logger.info("Calling the web service...");
         ArrayOfstring arrayOfstring = proxy.getItinerary(originAddress, destinationAddress);
         logger.info("Web service called.");
         List<String> instructions = new ArrayList<>(arrayOfstring.getString());
         logger.info("Parsing the instructions...");
-        parseInstructions(instructions);
-
+        List<Instruction> instructionList = getInstructions(instructions);
+        new MapViewer(instructionList);
+        instructionList.forEach(System.out::println);
     }
 
-    private static void parseInstructions(List<String> instructions) {
-        for (String instruction : instructions) {
-            String[] split = instruction.split("§");
-            String direction = split[0];
-            String distance = split[1];
-            System.out.println("Direction: " + direction + " - Distance: " + distance + "m");
+    public static boolean isUptime() {
+        try {
+            LetsGoBiking letsGoBiking = new LetsGoBiking();
+            letsGoBiking.getBasicHttpBindingILetsGoBiking();
+        } catch (Exception e) {
+            return false;
         }
+        return true;
     }
 
-    private static String askForAddress(String askedAddress) {
+    private static String askForAddress(String askedAddress, String... args) {
+        if (args.length > 0) {
+            return args[0];
+        }
         String address = "";
         Scanner scanner = new Scanner(System.in);
         while (address.isEmpty()) {
@@ -49,5 +67,17 @@ public class Application {
             address = scanner.nextLine();
         }
         return address;
+    }
+
+    public static List<Instruction> getInstructions(List<String> instructions) {
+        List<Instruction> instructionList = new ArrayList<>();
+        for (String instruction : instructions) {
+            String[] split = instruction.split("§");
+            String direction = split[0];
+            Double distance = Double.parseDouble(split[1].replace(",", "."));
+            GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[3].replace(",", ".")), Double.parseDouble(split[2].replace(",", ".")));
+            instructionList.add(new Instruction(direction, distance, geoPosition));
+        }
+        return instructionList;
     }
 }

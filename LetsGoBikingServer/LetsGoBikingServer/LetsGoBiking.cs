@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using LetsGoBikingServer.ProxyService;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
@@ -13,8 +14,7 @@ namespace LetsGoBikingServer
         private static readonly HttpClient Client = new HttpClient();
 
         private static readonly HttpClient InstructionsClient = new HttpClient();
-
-        private static readonly string JCDECEAUX_API_KEY = "8863c86d9599db3b8533179acd4d9ad54d52f975";
+        private static readonly string ORS_API_KEY = "5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5";
 
         public string[] GetItinerary(string origin, string destination)
         {
@@ -38,7 +38,7 @@ namespace LetsGoBikingServer
         {
             List<string> instructions = new List<string>();
             InstructionsClient.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
-            var response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile + "?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&start=" +
+            var response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile + "?api_key=" + ORS_API_KEY + "&start=" +
                 getLongitudeLatitude(coordinates[0]) + "&end=" + getLongitudeLatitude(coordinates[1])).Result;
             response.EnsureSuccessStatusCode();
             var responseBody = response.Content.ReadAsStringAsync().Result;
@@ -47,9 +47,18 @@ namespace LetsGoBikingServer
             var propert = JObject.Parse(features.ToString()).GetValue("properties");
             var segments = JObject.Parse(propert.ToString()).GetValue("segments")[0];
             var steps = JObject.Parse(segments.ToString()).GetValue("steps");
+            var geo = JObject.Parse(features.ToString()).GetValue("geometry");
+            var coords = JObject.Parse(geo.ToString()).GetValue("coordinates");
+            int i = 0;
             foreach (JObject step in steps)
             {
-                instructions.Add(step.GetValue("instruction").ToString() + "§" + step.GetValue("distance").ToString());
+                var text = step.GetValue("instruction").ToString();
+                var distance = step.GetValue("distance").ToString();
+                Instruction instruction = new Instruction(text, distance, new
+                    GeoCoordinate((double)coords[i][0], (double)coords[i][1]));
+
+                instructions.Add(instruction.ToString());
+                i++;
             }
             return instructions;
         } 
@@ -81,42 +90,16 @@ namespace LetsGoBikingServer
 
         public GeoCoordinate[] GetClosestStation(Address origin, Address destination)
         {
-            // on assume que si on arrive ici, la ville a déjà été vérifiée et donc pas besoin de rappeler l'API
-            // on récupère la liste des stations de la ville
-            var stations = GetStations(origin.City);
+            var proxyClient = new ProxyServiceClient();
+            Station closestToOrigin = proxyClient.ClosestStation(origin.geoCoordinate);
+            Station closestToDestionation = proxyClient.ClosestStation(destination.geoCoordinate);
 
-            // check station size
-            if (stations.Count == 0) throw new Exception("No station found");
 
-            var closest = new GeoCoordinate[2];
+            var res = new  GeoCoordinate[2];
+            res[0] = closestToOrigin.Coordinate;
+            res[1] = closestToDestionation.Coordinate;
 
-            closest[0] = stations[0].geoCoordinate;
-            closest[1] = stations[0].geoCoordinate;
-            foreach (var station in stations)
-            {
-                if (station.geoCoordinate.GetDistanceTo(origin.geoCoordinate) <
-                    closest[0].GetDistanceTo(origin.geoCoordinate)) closest[0] = station.geoCoordinate;
-                if (station.geoCoordinate.GetDistanceTo(destination.geoCoordinate) <
-                    closest[1].GetDistanceTo(destination.geoCoordinate)) closest[1] = station.geoCoordinate;
-            }
-
-            Console.WriteLine("Closest station to origin: " + closest[0]);
-            Console.WriteLine("Closest station to destination: " + closest[1]);
-            return closest;
-        }
-
-        private static List<Address> GetStations(string city)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            var response = client.GetAsync("https://api.jcdecaux.com/vls/v3/stations?apiKey=" + JCDECEAUX_API_KEY)
-                .Result;
-            response.EnsureSuccessStatusCode();
-            var responseBody = response.Content.ReadAsStringAsync().Result;
-            var jsonParsed = JArray.Parse(responseBody);
-            return jsonParsed.Select(sta => new Address(city,
-                new GeoCoordinate((double)sta["position"]["latitude"], (double)sta["position"]["longitude"]))).ToList();
+            return res;
         }
     }
 }

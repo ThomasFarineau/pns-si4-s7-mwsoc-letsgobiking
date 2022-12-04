@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsGoBikingServer", "LetsGoBikingServer\LetsGoBikingServer.csproj", "{43E39A15-BC93-4D83-9A75-3D95E7421E4B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8A89549A-265C-498B-BE32-5B29A0979C33} = {8A89549A-265C-498B-BE32-5B29A0979C33}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyService", "ProxyService\ProxyService.csproj", "{8A89549A-265C-498B-BE32-5B29A0979C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{43E39A15-BC93-4D83-9A75-3D95E7421E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E39A15-BC93-4D83-9A75-3D95E7421E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E39A15-BC93-4D83-9A75-3D95E7421E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A89549A-265C-498B-BE32-5B29A0979C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A89549A-265C-498B-BE32-5B29A0979C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A89549A-265C-498B-BE32-5B29A0979C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A89549A-265C-498B-BE32-5B29A0979C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
