@@ -1,7 +1,10 @@
 ﻿using System.Device.Location;
+using System.Runtime.Serialization;
 
 namespace LetsGoBikingServer;
-internal class Instruction
+
+[DataContract]
+public class Instruction
 {
     public string Text { get; set; }
     public string Distance { get; set; }
@@ -14,4 +17,9 @@ internal class Instruction
         Distance = distance;
         Location = location;
     }
+
+    public override string ToString() {
+        return Text + "§" + Distance + "§" + Location.Longitude + "§" + Location.Latitude;
+    }
+
 }

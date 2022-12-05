@@ -3,7 +3,8 @@ using System.Runtime.Serialization;
 
 namespace LetsGoBikingServer;
 
-internal class Address
+[DataContract]
+public class Address
 {
     internal string city;
 
