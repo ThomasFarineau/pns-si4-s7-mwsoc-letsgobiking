@@ -51,8 +51,10 @@ public class MapViewer extends JFrame {
 
         // Create waypoints from the geo-positions
         Set<DefaultWaypoint> waypoints = new HashSet<>();
+
         waypoints.add(new DefaultWaypoint(positions.get(0)));
-        waypoints.add(new DefaultWaypoint(positions.get(positions.size() - 1)));
+        for (Instruction instruction : instructions)
+            if (instruction.isWaypoint()) waypoints.add(new DefaultWaypoint(instruction.geoPosition()));
 
         // Create a waypoint painter that takes all the waypoints
         WaypointPainter<DefaultWaypoint> waypointPainter = new WaypointPainter<>();

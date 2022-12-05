@@ -76,8 +76,8 @@ public class Application {
             String[] split = instruction.split("§");
             String direction = split[0];
             Double distance = Double.parseDouble(split[1].replace(",", "."));
-            GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[3].replace(",", ".")), Double.parseDouble(split[2].replace(",", ".")));
-            instructionList.add(new Instruction(direction, distance, geoPosition));
+            GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[2].replace(",", ".")), Double.parseDouble(split[3].replace(",", ".")));
+            instructionList.add(new Instruction(direction, distance, geoPosition, split[0].startsWith("Arrive")));
         }
         return instructionList;
     }
