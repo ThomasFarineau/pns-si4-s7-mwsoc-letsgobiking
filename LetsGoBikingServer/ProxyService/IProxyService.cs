@@ -7,17 +7,15 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 
-namespace ProxyService
+namespace ProxyService;
+
+// REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom d'interface "IService1" à la fois dans le code et le fichier de configuration.
+[ServiceContract]
+public interface IProxyService
 {
-    // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom d'interface "IService1" à la fois dans le code et le fichier de configuration.
-    [ServiceContract]
-    public interface IProxyService
-    {
-        [OperationContract]
-        List<Station> GetStations();
+    [OperationContract]
+    List<Station> GetStations();
 
-        [OperationContract]
-        Station ClosestStation(GeoCoordinate coordinate);
-    }
-
+    [OperationContract]
+    Station ClosestStation(GeoCoordinate coordinate);
 }

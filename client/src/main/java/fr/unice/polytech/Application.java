@@ -72,6 +72,7 @@ public class Application {
     public static List<Instruction> getInstructions(List<String> instructions) {
         List<Instruction> instructionList = new ArrayList<>();
         for (String instruction : instructions) {
+            logger.info("Parsing instruction: " + instruction);
             String[] split = instruction.split("§");
             String direction = split[0];
             Double distance = Double.parseDouble(split[1].replace(",", "."));

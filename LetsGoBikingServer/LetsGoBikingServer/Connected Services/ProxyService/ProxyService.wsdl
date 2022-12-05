@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ProxyService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ProxyService" />
+      <xsd:import schemaLocation="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.Device.Location" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IProxyService_GetStations_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStations" />
+  </wsdl:message>
+  <wsdl:message name="IProxyService_GetStations_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProxyService_ClosestStation_InputMessage">
+    <wsdl:part name="parameters" element="tns:ClosestStation" />
+  </wsdl:message>
+  <wsdl:message name="IProxyService_ClosestStation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ClosestStationResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IProxyService">
+    <wsdl:operation name="GetStations">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProxyService/GetStations" message="tns:IProxyService_GetStations_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProxyService/GetStationsResponse" message="tns:IProxyService_GetStations_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ClosestStation">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProxyService/ClosestStation" message="tns:IProxyService_ClosestStation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProxyService/ClosestStationResponse" message="tns:IProxyService_ClosestStation_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IProxyService" type="tns:IProxyService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetStations">
+      <soap:operation soapAction="http://tempuri.org/IProxyService/GetStations" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClosestStation">
+      <soap:operation soapAction="http://tempuri.org/IProxyService/ClosestStation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ProxyService">
+    <wsdl:port name="BasicHttpBinding_IProxyService" binding="tns:BasicHttpBinding_IProxyService">
+      <soap:address location="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
