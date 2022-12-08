@@ -1,14 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Caching;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace ProxyService;
 
@@ -19,23 +16,26 @@ public class ProxyService : IProxyService
     private static readonly string JCDECEAUX_API_KEY = "8863c86d9599db3b8533179acd4d9ad54d52f975";
     private static readonly int CACHE_EXPIRATION = 15;
 
-    public Station ClosestStation(GeoCoordinate coordinate)
+    public Station ClosestStation(GeoCoordinate Coordinate, string city)
     {
-        var stations = GetStations();
-        GeoCoordinate closest = stations.Select(station => station.Coordinate).OrderBy(station => station.GetDistanceTo(coordinate)).First();
-        Station station = stations.Where(stations => stations.Coordinate.Equals(closest)).FirstOrDefault();
+        var stations = GetStations(city);
+        var closest = stations.Select(station => station.Coordinate)
+            .OrderBy(station => station.GetDistanceTo(Coordinate)).First();
+        var station = stations.Where(stations => stations.Coordinate.Equals(closest)).FirstOrDefault();
         return station;
     }
 
-    public List<Station> GetStations()
+    public List<Station> GetStations(string City)
     {
         ObjectCache cache = MemoryCache.Default;
+        var keyName = StationsCacheKey + "_" + City;
 
-        if (cache.Contains(StationsCacheKey)) return cache.Get(StationsCacheKey) as List<Station>;
+        if (cache.Contains(StationsCacheKey)) return cache.Get(keyName) as List<Station>;
         var client = new HttpClient();
         client.DefaultRequestHeaders.Accept.Add(
-            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-        var response = client.GetAsync("https://api.jcdecaux.com/vls/v3/stations?apiKey=" + JCDECEAUX_API_KEY)
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        var response = client
+            .GetAsync("https://api.jcdecaux.com/vls/v1/stations?contract=" + City + "&apiKey=" + JCDECEAUX_API_KEY)
             .Result;
         response.EnsureSuccessStatusCode();
         var responseBody = response.Content.ReadAsStringAsync().Result;
@@ -44,15 +44,13 @@ public class ProxyService : IProxyService
         // station list
         var stations = jsonParsed.Select(
             station => new Station((string)station["name"],
-                new GeoCoordinate((double)station["position"]["latitude"], (double)station["position"]["longitude"]),
-                (string)station["contractName"])
+                new GeoCoordinate((double)station["position"]["lat"], (double)station["position"]["lng"]))
         ).ToList();
-
         var cacheItemPolicy = new CacheItemPolicy
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(CACHE_EXPIRATION)
         };
-        cache.Add(StationsCacheKey, stations, cacheItemPolicy);
+        cache.Add(keyName, stations, cacheItemPolicy);
         return stations;
     }
 }

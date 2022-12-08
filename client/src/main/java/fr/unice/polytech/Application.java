@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 public class Application {
 
@@ -38,7 +39,7 @@ public class Application {
         logger.info("Parsing the instructions...");
         List<Instruction> instructionList = getInstructions(instructions);
         new MapViewer(instructionList);
-        instructionList.forEach(System.out::println);
+        IntStream.range(0, instructionList.size()).mapToObj(i -> "Step " + (i+1) + " - " + instructionList.get(i)).forEach(System.out::println);
         System.out.println("----------------------- ACTIVE MQ -----------------------");
         ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         Connection connect;

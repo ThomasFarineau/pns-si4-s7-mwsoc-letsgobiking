@@ -23,9 +23,6 @@ namespace LetsGoBikingServer.ProxyService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ContractNameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Device.Location.GeoCoordinate CoordinateField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -38,19 +35,6 @@ namespace LetsGoBikingServer.ProxyService {
             }
             set {
                 this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ContractName {
-            get {
-                return this.ContractNameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ContractNameField, value) != true)) {
-                    this.ContractNameField = value;
-                    this.RaisePropertyChanged("ContractName");
-                }
             }
         }
         
@@ -95,16 +79,16 @@ namespace LetsGoBikingServer.ProxyService {
     public interface IProxyService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxyService/GetStations", ReplyAction="http://tempuri.org/IProxyService/GetStationsResponse")]
-        LetsGoBikingServer.ProxyService.Station[] GetStations();
+        LetsGoBikingServer.ProxyService.Station[] GetStations(string city);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxyService/GetStations", ReplyAction="http://tempuri.org/IProxyService/GetStationsResponse")]
-        System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station[]> GetStationsAsync();
+        System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station[]> GetStationsAsync(string city);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxyService/ClosestStation", ReplyAction="http://tempuri.org/IProxyService/ClosestStationResponse")]
-        LetsGoBikingServer.ProxyService.Station ClosestStation(System.Device.Location.GeoCoordinate coordinate);
+        LetsGoBikingServer.ProxyService.Station ClosestStation(System.Device.Location.GeoCoordinate Coordinate, string City);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxyService/ClosestStation", ReplyAction="http://tempuri.org/IProxyService/ClosestStationResponse")]
-        System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station> ClosestStationAsync(System.Device.Location.GeoCoordinate coordinate);
+        System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station> ClosestStationAsync(System.Device.Location.GeoCoordinate Coordinate, string City);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -134,20 +118,20 @@ namespace LetsGoBikingServer.ProxyService {
                 base(binding, remoteAddress) {
         }
         
-        public LetsGoBikingServer.ProxyService.Station[] GetStations() {
-            return base.Channel.GetStations();
+        public LetsGoBikingServer.ProxyService.Station[] GetStations(string city) {
+            return base.Channel.GetStations(city);
         }
         
-        public System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station[]> GetStationsAsync() {
-            return base.Channel.GetStationsAsync();
+        public System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station[]> GetStationsAsync(string city) {
+            return base.Channel.GetStationsAsync(city);
         }
         
-        public LetsGoBikingServer.ProxyService.Station ClosestStation(System.Device.Location.GeoCoordinate coordinate) {
-            return base.Channel.ClosestStation(coordinate);
+        public LetsGoBikingServer.ProxyService.Station ClosestStation(System.Device.Location.GeoCoordinate Coordinate, string City) {
+            return base.Channel.ClosestStation(Coordinate, City);
         }
         
-        public System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station> ClosestStationAsync(System.Device.Location.GeoCoordinate coordinate) {
-            return base.Channel.ClosestStationAsync(coordinate);
+        public System.Threading.Tasks.Task<LetsGoBikingServer.ProxyService.Station> ClosestStationAsync(System.Device.Location.GeoCoordinate Coordinate, string City) {
+            return base.Channel.ClosestStationAsync(Coordinate, City);
         }
     }
 }

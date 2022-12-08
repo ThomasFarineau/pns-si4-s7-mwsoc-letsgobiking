@@ -6,14 +6,12 @@ namespace ProxyService;
 [DataContract]
 public class Station
 {
-    [DataMember] public string Name { get; set; }
-    [DataMember] public GeoCoordinate Coordinate { get; set; }
-    [DataMember] public string ContractName { get; set; }
-
-    public Station(string name, GeoCoordinate coordinate, string contractName)
+    public Station(string name, GeoCoordinate coordinate)
     {
         Name = name;
         Coordinate = coordinate;
-        ContractName = contractName;
     }
+
+    [DataMember] public string Name { get; set; }
+    [DataMember] public GeoCoordinate Coordinate { get; set; }
 }

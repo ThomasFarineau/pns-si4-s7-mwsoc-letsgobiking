@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.Text;
 
 namespace ProxyService;
 
@@ -14,8 +9,8 @@ namespace ProxyService;
 public interface IProxyService
 {
     [OperationContract]
-    List<Station> GetStations();
+    List<Station> GetStations(string city);
 
     [OperationContract]
-    Station ClosestStation(GeoCoordinate coordinate);
+    Station ClosestStation(GeoCoordinate Coordinate, string City);
 }

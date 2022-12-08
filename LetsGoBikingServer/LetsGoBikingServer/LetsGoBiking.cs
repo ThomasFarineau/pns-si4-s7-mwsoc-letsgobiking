@@ -1,12 +1,11 @@
-﻿using LetsGoBikingServer.ProxyService;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
 using System.Net.Http;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
+using LetsGoBikingServer.ProxyService;
+using Newtonsoft.Json.Linq;
 
 namespace LetsGoBikingServer;
 
@@ -25,15 +24,18 @@ public class LetsGoBiking : ILetsGoBiking
         return instructions;
     }
 
-    private static string[] GetInstructions(GeoCoordinate origin, GeoCoordinate destination)
+    private static string[] GetInstructions(Pair<GeoCoordinate, string> origin, Pair<GeoCoordinate, string> destination)
     {
         var ClosestStationToOrigin = GetClosestStation(origin);
         var ClosestStationToDestination = GetClosestStation(destination);
         var st = new string[2];
         var instructions = new List<string>();
-        GetInstructions("foot-walking", origin, ClosestStationToOrigin).ForEach(i => instructions.Add(i.ToString()));
-        GetInstructions("cycling-regular", ClosestStationToOrigin, ClosestStationToDestination).ForEach(i => instructions.Add(i.ToString()));
-        GetInstructions("foot-walking", ClosestStationToDestination, destination).ForEach(i => instructions.Add(i.ToString()));
+        GetInstructions("foot-walking", origin.First, ClosestStationToOrigin)
+            .ForEach(i => instructions.Add(i.ToString()));
+        GetInstructions("cycling-regular", ClosestStationToOrigin, ClosestStationToDestination)
+            .ForEach(i => instructions.Add(i.ToString()));
+        GetInstructions("foot-walking", ClosestStationToDestination, destination.First)
+            .ForEach(i => instructions.Add(i.ToString()));
         return instructions.ToArray();
     }
 
@@ -41,11 +43,13 @@ public class LetsGoBiking : ILetsGoBiking
     {
         var instructions = new List<Instruction>();
         InstructionsClient.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
-        var Response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile + "?api_key=" + ORS_API_KEY + "&start=" + GetCoord(origin) + "&end=" + GetCoord(destination)).Result;
+        var Response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile +
+                                                   "?api_key=" + ORS_API_KEY + "&start=" + GetCoord(origin) + "&end=" +
+                                                   GetCoord(destination)).Result;
         Response.EnsureSuccessStatusCode();
         var responseBody = Response.Content.ReadAsStringAsync().Result;
         var jsonParsed = JObject.Parse(responseBody);
-        var features = JObject.Parse(responseBody.ToString()).GetValue("features")[0];
+        var features = JObject.Parse(responseBody).GetValue("features")[0];
         var propert = JObject.Parse(features.ToString()).GetValue("properties");
         var segments = JObject.Parse(propert.ToString()).GetValue("segments")[0];
         var steps = JObject.Parse(segments.ToString()).GetValue("steps");
@@ -69,7 +73,7 @@ public class LetsGoBiking : ILetsGoBiking
         return g.Longitude.ToString().Replace(',', '.') + "," + g.Latitude.ToString().Replace(",", ".");
     }
 
-    private static GeoCoordinate CallOrsSearchApi(string addr)
+    private static Pair<GeoCoordinate, string> CallOrsSearchApi(string addr)
     {
         Client.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
         var response = Client
@@ -79,40 +83,40 @@ public class LetsGoBiking : ILetsGoBiking
         response.EnsureSuccessStatusCode();
         var responseBody = response.Content.ReadAsStringAsync().Result;
         var jsonParsed = JObject.Parse(responseBody);
-        var features = JObject.Parse(responseBody.ToString()).GetValue("features")[0];
+        var features = JObject.Parse(responseBody).GetValue("features")[0];
         var propert = JObject.Parse(features.ToString()).GetValue("properties");
         var geometry = JObject.Parse(features.ToString()).GetValue("geometry");
         var ville = JObject.Parse(propert.ToString()).GetValue("locality");
         var coord = JObject.Parse(geometry.ToString()).GetValue("coordinates");
         var geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
-        return geoCoordinate;
+        return new Pair<GeoCoordinate, string>(geoCoordinate, ville.ToString());
     }
 
-    public static GeoCoordinate GetClosestStation(GeoCoordinate geoCoordinate)
+    public static GeoCoordinate GetClosestStation(Pair<GeoCoordinate, string> addr)
     {
         var proxyClient = new ProxyServiceClient();
-        Station closest = proxyClient.ClosestStation(geoCoordinate);
+        var closest = proxyClient.ClosestStation(addr.First, addr.Second);
         return closest.Coordinate;
     }
 
     public void HandleActiveMQ(string[] instructions)
     {
         // Create a Connection Factory.
-        Uri connecturi = new Uri("activemq:tcp://localhost:61616");
-        ConnectionFactory connectionFactory = new ConnectionFactory(connecturi);
+        var connecturi = new Uri("activemq:tcp://localhost:61616");
+        var connectionFactory = new ConnectionFactory(connecturi);
 
         // Create a single Connection from the Connection Factory.
-        IConnection connection = connectionFactory.CreateConnection();
+        var connection = connectionFactory.CreateConnection();
         connection.Start();
 
         // Create a session from the Connection.
-        ISession session = connection.CreateSession();
+        var session = connection.CreateSession();
 
         // Use the session to target a queue.
         IDestination destination = session.GetQueue("instructions");
 
         // Create a Producer targetting the selected queue.
-        IMessageProducer producer = session.CreateProducer(destination);
+        var producer = session.CreateProducer(destination);
 
         // You may configure everything to your needs, for instance:
         producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
@@ -121,9 +125,9 @@ public class LetsGoBiking : ILetsGoBiking
         //ITextMessage message = session.CreateTextMessage("Hello World 2");
         //producer.Send(message);
 
-        foreach (string i in instructions)
+        foreach (var i in instructions)
         {
-            ITextMessage message = session.CreateTextMessage(i);
+            var message = session.CreateTextMessage(i);
             producer.Send(message);
         }
 
@@ -133,5 +137,17 @@ public class LetsGoBiking : ILetsGoBiking
         // Don't forget to close your session and connection when finished.
         session.Close();
         connection.Close();
+    }
+
+    public class Pair<T, S>
+    {
+        public Pair(T first, S second)
+        {
+            First = first;
+            Second = second;
+        }
+
+        public T First { get; set; }
+        public S Second { get; set; }
     }
 }
