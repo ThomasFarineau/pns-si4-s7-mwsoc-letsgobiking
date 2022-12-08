@@ -7,6 +7,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import javax.jms.*;
+import javax.xml.ws.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

@@ -12,7 +12,7 @@ namespace ProxyService
     {
        private static void Main()
         {
-            var httpUrl = new Uri("http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/");
+            var httpUrl = new Uri("http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService");
             var Host = new ServiceHost(typeof(ProxyService), httpUrl);
 
             Host.AddServiceEndpoint(typeof(IProxyService), new BasicHttpBinding(), "");
@@ -21,7 +21,6 @@ namespace ProxyService
             {
                 HttpGetEnabled = true,
                 HttpsGetEnabled = true,
-                MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 }
             };
             Host.Description.Behaviors.Add(smb);
             Host.Open();

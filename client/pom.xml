@@ -57,13 +57,15 @@
                 </executions>
                 <configuration>
                     <wsdlUrls>
-                        <wsdlUrl>http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ILetsGoBiking/?wsdl
+                        <wsdlUrl>http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ILetsGoBiking?wsdl
                         </wsdlUrl>
                     </wsdlUrls>
                     <keep>true</keep>
                     <packageName>fr.unice.polytech.server</packageName>
                     <sourceDestDir>src/main/java</sourceDestDir>
-                    <args>-extension</args>
+                    <args>
+                        <arg>-extension</arg>
+                    </args>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="lLR+H4iJq8GMIdNyMGoxyS/zoF4Bsvk2QC7QtBomWuw=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="oRKpjOUM9MdSNWPu+ISCBLJSGwDLerPYgZR7UZEior8=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IProxyService1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IProxyService">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_IProxyService1</serializedValue>
+          <serializedValue>BasicHttpBinding_IProxyService</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IProxyService" contract="ProxyService.IProxyService" bindingType="basicHttpBinding" address="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/" bindingConfiguration="BasicHttpBinding_IProxyService1">
+    <endpoint name="BasicHttpBinding_IProxyService" contract="ProxyService.IProxyService" bindingType="basicHttpBinding" address="http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService" bindingConfiguration="BasicHttpBinding_IProxyService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService/</serializedValue>
+          <serializedValue>http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ProxyService</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -124,7 +124,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_IProxyService1</serializedValue>
+          <serializedValue>BasicHttpBinding_IProxyService</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ProxyService.IProxyService</serializedValue>

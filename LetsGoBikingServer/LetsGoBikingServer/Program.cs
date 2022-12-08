@@ -12,20 +12,21 @@ namespace LetsGoBikingServer
     {
         private static void Main(string[] args)
         {
-            var httpUrl = new Uri("http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ILetsGoBiking/");
+            var httpUrl = new Uri("http://localhost:8733/Design_Time_Addresses/LetsGoBikingServer/ILetsGoBiking");
             var Host = new ServiceHost(typeof(LetsGoBiking), httpUrl);
 
             Host.AddServiceEndpoint(typeof(ILetsGoBiking), new BasicHttpBinding(), "");
 
+           
 
             var smb = new ServiceMetadataBehavior
             {
                 HttpGetEnabled = true,
                 HttpsGetEnabled = true,
-                MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 }
             };
             Host.Description.Behaviors.Add(smb);
             Host.Open();
+
 
             Console.WriteLine("LetsGoBikingServer is running");
             Console.WriteLine("Press <Enter> key to exit" + Environment.NewLine);
