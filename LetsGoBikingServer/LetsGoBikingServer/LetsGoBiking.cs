@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using System.Net.Http;
+using System.Web.UI.WebControls;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using LetsGoBikingServer.ProxyService;
@@ -28,20 +30,24 @@ public class LetsGoBiking : ILetsGoBiking
     {
         var ClosestStationToOrigin = GetClosestStation(origin);
         var ClosestStationToDestination = GetClosestStation(destination);
-        var st = new string[2];
         var instructions = new List<string>();
-        GetInstructions("foot-walking", origin.First, ClosestStationToOrigin)
-            .ForEach(i => instructions.Add(i.ToString()));
-        GetInstructions("cycling-regular", ClosestStationToOrigin, ClosestStationToDestination)
-            .ForEach(i => instructions.Add(i.ToString()));
-        GetInstructions("foot-walking", ClosestStationToDestination, destination.First)
-            .ForEach(i => instructions.Add(i.ToString()));
+
+        Pair<List<Instruction>, List<GeoCoordinate>> STEP_1 = GetInstructions("foot-walking", origin.First, ClosestStationToOrigin);
+        Pair<List<Instruction>, List<GeoCoordinate>> STEP_2 = GetInstructions("cycling-regular", ClosestStationToOrigin, ClosestStationToDestination);
+        Pair<List<Instruction>, List<GeoCoordinate>> STEP_3 = GetInstructions("foot-walking", ClosestStationToDestination, destination.First);
+
+        STEP_1.First.ForEach(i => instructions.Add(i.ToString(STEP_1.Second)));
+        STEP_2.First.ForEach(i => instructions.Add(i.ToString(STEP_2.Second)));
+        STEP_3.First.ForEach(i => instructions.Add(i.ToString(STEP_3.Second)));
+
+
         return instructions.ToArray();
     }
 
-    private static List<Instruction> GetInstructions(string profile, GeoCoordinate origin, GeoCoordinate destination)
+    private static Pair<List<Instruction>, List<GeoCoordinate>> GetInstructions(string profile, GeoCoordinate origin, GeoCoordinate destination)
     {
         var instructions = new List<Instruction>();
+        var coordinates = new List<GeoCoordinate>();
         InstructionsClient.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
         var Response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile +
                                                    "?api_key=" + ORS_API_KEY + "&start=" + GetCoord(origin) + "&end=" +
@@ -54,21 +60,22 @@ public class LetsGoBiking : ILetsGoBiking
         var segments = JObject.Parse(propert.ToString()).GetValue("segments")[0];
         var steps = JObject.Parse(segments.ToString()).GetValue("steps");
         var geo = JObject.Parse(features.ToString()).GetValue("geometry");
-        var coords = JObject.Parse(geo.ToString()).GetValue("coordinates");
-        var i = 0;
+        var coords = JObject.Parse(geo.ToString()).GetValue("coordinates").ToArray();
+        foreach(JToken v in coords)
+        {
+            coordinates.Add(new GeoCoordinate((double)v[0], (double)v[1]));
+        }
         foreach (JObject step in steps)
         {
             var text = step.GetValue("instruction").ToString();
             var distance = step.GetValue("distance").ToString();
-            instructions.Add(new Instruction(text, distance, new
-                GeoCoordinate((double)coords[i][0], (double)coords[i][1])));
-            i++;
+            var way_points = step.GetValue("way_points").ToArray();
+            instructions.Add(new Instruction(text, distance, (int) way_points[0], (int) way_points[1]));
         }
-
-        return instructions;
+        return new Pair<List<Instruction>, List<GeoCoordinate>>(instructions, coordinates);
     }
 
-    private static string GetCoord(GeoCoordinate g)
+    public static string GetCoord(GeoCoordinate g)
     {
         return g.Longitude.ToString().Replace(',', '.') + "," + g.Latitude.ToString().Replace(",", ".");
     }

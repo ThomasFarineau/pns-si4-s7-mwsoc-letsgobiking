@@ -92,7 +92,11 @@ public class Application {
     public static Instruction parseInstruction(String[] split) {
         String direction = split[0];
         Double distance = Double.parseDouble(split[1].replace(",", "."));
-        GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[2].replace(",", ".")), Double.parseDouble(split[3].replace(",", ".")));
-        return new Instruction(direction, distance, geoPosition, split[0].startsWith("Arrive"));
+        List<GeoPosition> geoPositions = new ArrayList<>();
+        for(int i = 2; i < split.length; i++) {
+            GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[i].split(",")[0]), Double.parseDouble(split[i].split(",")[1]));
+            geoPositions.add(geoPosition);
+        }
+        return new Instruction(direction, distance, geoPositions, direction.startsWith("Arrive"));
     }
 }

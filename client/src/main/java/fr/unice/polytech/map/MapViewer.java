@@ -43,7 +43,7 @@ public class MapViewer extends JFrame {
 
         mapViewer.setTileFactory(defaultTileFactory);
 
-        List<GeoPosition> positions = instructions.stream().map(Instruction::geoPosition).toList();
+        List<GeoPosition> positions = instructions.stream().flatMap(i -> i.geoPosition().stream()).toList();
         logger.info("Loaded " + positions.size() + " positions in the painter");
 
         // Create a track from the geo-positions
@@ -54,7 +54,7 @@ public class MapViewer extends JFrame {
 
         waypoints.add(new DefaultWaypoint(positions.get(0)));
         for (Instruction instruction : instructions)
-            if (instruction.isWaypoint()) waypoints.add(new DefaultWaypoint(instruction.geoPosition()));
+            if (instruction.isWaypoint()) waypoints.add(new DefaultWaypoint(instruction.geoPosition().get(instruction.geoPosition().size() - 1)));
 
         // Create a waypoint painter that takes all the waypoints
         WaypointPainter<DefaultWaypoint> waypointPainter = new WaypointPainter<>();
