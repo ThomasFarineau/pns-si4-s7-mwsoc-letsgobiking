@@ -4,16 +4,19 @@ import fr.unice.polytech.map.MapViewer;
 import fr.unice.polytech.server.ArrayOfstring;
 import fr.unice.polytech.server.ILetsGoBiking;
 import fr.unice.polytech.server.LetsGoBiking;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 
+import javax.jms.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class Application {
+public class Application implements MessageListener {
 
     static Logger logger = Logger.getLogger(Application.class.getName());
+    static String separator = "§";
 
     public static void main(String[] args) {
 
@@ -36,6 +39,19 @@ public class Application {
         List<Instruction> instructionList = getInstructions(instructions);
         new MapViewer(instructionList);
         instructionList.forEach(System.out::println);
+        System.out.println("----------------------- ACTIVE MQ -----------------------");
+        ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        Connection connect = null;
+        try {
+            connect = factory.createConnection();
+            Session receiveSession = connect.createSession(false,javax.jms.Session.AUTO_ACKNOWLEDGE);
+            Queue queue = receiveSession.createQueue("instructions");
+            javax.jms.MessageConsumer qReceiver = receiveSession.createConsumer(queue);
+            qReceiver.setMessageListener(this);
+            connect.start();
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean isUptime() {
@@ -65,12 +81,28 @@ public class Application {
         List<Instruction> instructionList = new ArrayList<>();
         for (String instruction : instructions) {
             logger.info("Parsing instruction: " + instruction);
-            String[] split = instruction.split("§");
-            String direction = split[0];
-            Double distance = Double.parseDouble(split[1].replace(",", "."));
-            GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[2].replace(",", ".")), Double.parseDouble(split[3].replace(",", ".")));
-            instructionList.add(new Instruction(direction, distance, geoPosition, split[0].startsWith("Arrive")));
+            String[] split = instruction.split(separator);
+            instructionList.add(parseInstruction(split));
         }
         return instructionList;
+    }
+
+    public static Instruction parseInstruction(String[] split) {
+        String direction = split[0];
+        Double distance = Double.parseDouble(split[1].replace(",", "."));
+        GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[2].replace(",", ".")), Double.parseDouble(split[3].replace(",", ".")));
+        return new Instruction(direction, distance, geoPosition, split[0].startsWith("Arrive"));
+    }
+
+    @Override
+    public void onMessage(Message message) {
+        if (message instanceof TextMessage m) {
+            try {
+                Instruction instruction = parseInstruction(m.getText().split(separator));
+                System.out.println(instruction);
+            } catch (JMSException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
