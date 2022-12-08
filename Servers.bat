@@ -1,0 +1,1 @@
+wt -d "%cd%" "bat\proxy.bat" ; split-pane -H -d "%cd%" "bat\server.bat"

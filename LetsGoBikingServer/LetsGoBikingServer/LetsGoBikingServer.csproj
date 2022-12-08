@@ -6,12 +6,11 @@
         <ProductVersion>8.0.50727</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <ProjectGuid>{43E39A15-BC93-4D83-9A75-3D95E7421E4B}</ProjectGuid>
-        <OutputType>Library</OutputType>
+        <OutputType>Exe</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>LetsGoBikingServer</RootNamespace>
         <AssemblyName>LetsGoBikingServer</AssemblyName>
         <ProjectTypeGuids>{3D9AD99F-2412-4246-B90B-4EAA41C64699};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-        <StartArguments>/client:"WcfTestClient.exe"</StartArguments>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
         <XsdCodeGenEnabled>True</XsdCodeGenEnabled>
@@ -149,6 +148,7 @@
         <Compile Include="ILetsGoBiking.cs"/>
         <Compile Include="LetsGoBiking.cs"/>
         <Compile Include="Instruction.cs"/>
+		<Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>

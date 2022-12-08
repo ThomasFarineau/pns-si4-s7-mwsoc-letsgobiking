@@ -18,6 +18,8 @@ public class ProxyService : IProxyService
 
     public Station ClosestStation(GeoCoordinate Coordinate, string city)
     {
+        Console.WriteLine("ClosestStation called with coordinate: " + Coordinate + " and city: " + city);
+
         var stations = GetStations(city);
         var closest = stations.Select(station => station.Coordinate)
             .OrderBy(station => station.GetDistanceTo(Coordinate)).First();

@@ -1,0 +1,1 @@
+wt -d "%cd%" "bat\client.bat"

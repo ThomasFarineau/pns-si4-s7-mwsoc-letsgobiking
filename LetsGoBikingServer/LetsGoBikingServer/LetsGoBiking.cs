@@ -19,6 +19,8 @@ public class LetsGoBiking : ILetsGoBiking
 
     public string[] GetItinerary(string origin, string destination)
     {
+        Console.WriteLine("GetItinerary called with origin: " + origin + " and destination: " + destination);
+
         var o = CallOrsSearchApi(origin);
         var d = CallOrsSearchApi(destination);
         var instructions = GetInstructions(o, d);
@@ -137,6 +139,8 @@ public class LetsGoBiking : ILetsGoBiking
             var message = session.CreateTextMessage(i);
             producer.Send(message);
         }
+
+        producer.Send(session.CreateTextMessage("END"));
 
         Console.WriteLine("Message sent, check ActiveMQ web interface to confirm.");
         Console.ReadLine();
