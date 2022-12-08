@@ -43,16 +43,12 @@ public class MapViewer extends JFrame {
 
         mapViewer.setTileFactory(defaultTileFactory);
 
-        List<GeoPosition> positions = instructions.stream().flatMap(i -> i.geoPosition().stream()).toList();
-        logger.info("Loaded " + positions.size() + " positions in the painter");
-
-        // Create a track from the geo-positions
-        RoutePainter routePainter = new RoutePainter(positions);
+        List<Painter<JXMapViewer>> painters = instructions.stream().map(instruction -> new RoutePainter(instruction.geoPosition())).collect(Collectors.toList());
 
         // Create waypoints from the geo-positions
         Set<DefaultWaypoint> waypoints = new HashSet<>();
 
-        waypoints.add(new DefaultWaypoint(positions.get(0)));
+        waypoints.add(new DefaultWaypoint(instructions.get(0).geoPosition().get(0)));
         for (Instruction instruction : instructions)
             if (instruction.isWaypoint()) waypoints.add(new DefaultWaypoint(instruction.geoPosition().get(instruction.geoPosition().size() - 1)));
 
@@ -61,8 +57,6 @@ public class MapViewer extends JFrame {
         waypointPainter.setWaypoints(waypoints);
 
         // Create a compound painter that uses both the route-painter and the waypoint-painter
-        List<Painter<JXMapViewer>> painters = new ArrayList<>();
-        painters.add(routePainter);
         painters.add(waypointPainter);
 
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
@@ -70,7 +64,7 @@ public class MapViewer extends JFrame {
 
         // Set the focus
         mapViewer.setZoom(7);
-        mapViewer.setAddressLocation(positions.get(0));
+        mapViewer.setAddressLocation(instructions.get(0).geoPosition().get(0));
 
         // Add interactions
         MouseInputListener mia = new PanMouseInputListener(mapViewer);

@@ -29,8 +29,8 @@ public class Application {
         LetsGoBiking letsGoBiking = new LetsGoBiking();
         ILetsGoBiking proxy = letsGoBiking.getBasicHttpBindingILetsGoBiking();
 
-        String originAddress = askForAddress("origin");
-        String destinationAddress = askForAddress("destination");
+        String originAddress = askForAddress("origin", "2 Place de Paris, 69009 Lyon");
+        String destinationAddress = askForAddress("destination", "25 Rue Georges Gouy, 69007 Lyon");
 
         logger.info("Calling the web service...");
         ArrayOfstring arrayOfstring = proxy.getItinerary(originAddress, destinationAddress);
