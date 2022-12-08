@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class Application implements MessageListener {
+public class Application {
 
     static Logger logger = Logger.getLogger(Application.class.getName());
     static String separator = "§";
@@ -41,13 +41,14 @@ public class Application implements MessageListener {
         instructionList.forEach(System.out::println);
         System.out.println("----------------------- ACTIVE MQ -----------------------");
         ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-        Connection connect = null;
+        Connection connect;
         try {
             connect = factory.createConnection();
             Session receiveSession = connect.createSession(false,javax.jms.Session.AUTO_ACKNOWLEDGE);
             Queue queue = receiveSession.createQueue("instructions");
             javax.jms.MessageConsumer qReceiver = receiveSession.createConsumer(queue);
-            qReceiver.setMessageListener(this);
+            ActiveMQClient client = new ActiveMQClient();
+            qReceiver.setMessageListener(client);
             connect.start();
         } catch (JMSException e) {
             e.printStackTrace();
@@ -92,17 +93,5 @@ public class Application implements MessageListener {
         Double distance = Double.parseDouble(split[1].replace(",", "."));
         GeoPosition geoPosition = new GeoPosition(Double.parseDouble(split[2].replace(",", ".")), Double.parseDouble(split[3].replace(",", ".")));
         return new Instruction(direction, distance, geoPosition, split[0].startsWith("Arrive"));
-    }
-
-    @Override
-    public void onMessage(Message message) {
-        if (message instanceof TextMessage m) {
-            try {
-                Instruction instruction = parseInstruction(m.getText().split(separator));
-                System.out.println(instruction);
-            } catch (JMSException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
