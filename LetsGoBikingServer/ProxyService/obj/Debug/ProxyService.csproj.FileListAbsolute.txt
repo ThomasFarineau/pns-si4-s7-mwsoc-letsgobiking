@@ -1,0 +1,11 @@
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\bin\Debug\ProxyService.exe.config
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\bin\Debug\ProxyService.exe
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\bin\Debug\ProxyService.pdb
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.csproj.AssemblyReference.cache
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.csproj.SuggestedBindingRedirects.cache
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.csproj.CoreCompileInputs.cache
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.csproj.CopyComplete
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.exe
+C:\Users\Thoma\IdeaProjects\polytech-mwsoc-letsgobiking\LetsGoBikingServer\ProxyService\obj\Debug\ProxyService.pdb
