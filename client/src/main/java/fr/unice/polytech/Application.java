@@ -30,10 +30,8 @@ public class Application {
         LetsGoBiking letsGoBiking = new LetsGoBiking();
         ILetsGoBiking proxy = letsGoBiking.getBasicHttpBindingILetsGoBiking();
 
-        //2 Place de Paris, 69009 Lyon
-        String originAddress = askForAddress("origin", "2 Place de Paris, 69009 Lyon");
-        //25 Rue Georges Gouy, 69007 Lyon
-        String destinationAddress = askForAddress("destination", "25 Rue Georges Gouy, 69007 Lyon");
+        String originAddress = askForAddress("origin");
+        String destinationAddress = askForAddress("destination");
 
         if (debug) logger.info("Calling the web service...");
         new Thread(() -> {
