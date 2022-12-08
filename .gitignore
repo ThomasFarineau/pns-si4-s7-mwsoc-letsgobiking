@@ -1,5 +1,7 @@
 LetsGoBikingServer/LetsGoBikingServer/bin/*
 LetsGoBikingServer/LetsGoBikingServer/obj/*
+LetsGoBikingServer/ProxyService/bin/*
+LetsGoBikingServer/ProxyService/obj/*
 LetsGoBikingServer/.vs
 LetsGoBikingServer/.idea
 .idea
