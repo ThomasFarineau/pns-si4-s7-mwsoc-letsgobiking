@@ -22,12 +22,9 @@ public class ProxyService : IProxyService
     public Station ClosestStation(GeoCoordinate coordinate)
     {
         var stations = GetStations();
-        var closest = stations[0];
-        foreach (var station in stations)
-            if (station.Coordinate.GetDistanceTo(coordinate) <
-                closest.Coordinate.GetDistanceTo(coordinate))
-                closest = station;
-        return closest;
+        GeoCoordinate closest = stations.Select(station => station.Coordinate).OrderBy(station => station.GetDistanceTo(coordinate)).First();
+        Station station = stations.Where(stations => stations.Coordinate.Equals(closest)).FirstOrDefault();
+        return station;
     }
 
     public List<Station> GetStations()

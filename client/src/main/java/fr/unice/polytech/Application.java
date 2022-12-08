@@ -25,16 +25,8 @@ public class Application {
         LetsGoBiking letsGoBiking = new LetsGoBiking();
         ILetsGoBiking proxy = letsGoBiking.getBasicHttpBindingILetsGoBiking();
 
-        //2 Place de Paris, 69009 Lyon
-        //1 Bd Jard. Zoologique, 13004 Marseille
-        /*
         String originAddress = askForAddress("origin");
         String destinationAddress = askForAddress("destination");
-        */
-
-        String originAddress = askForAddress("origin", "2 Place de Paris, 69009 Lyon");
-        String destinationAddress = askForAddress("destination", "2 rue Saint Pierre de Vaise, 69009 Lyon");
-
 
         logger.info("Calling the web service...");
         ArrayOfstring arrayOfstring = proxy.getItinerary(originAddress, destinationAddress);

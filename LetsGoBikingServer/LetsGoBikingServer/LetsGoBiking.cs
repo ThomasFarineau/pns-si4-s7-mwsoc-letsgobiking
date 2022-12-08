@@ -18,32 +18,29 @@ public class LetsGoBiking : ILetsGoBiking
     {
         var o = CallOrsSearchApi(origin);
         var d = CallOrsSearchApi(destination);
-        var station = GetClosestStation(o, d);
-        var instructions = GetInstructions(o, d, station);
+        var instructions = GetInstructions(o, d);
         return instructions;
     }
 
-    private static string[] GetInstructions(Address o, Address d, GeoCoordinate[] station)
+    private static string[] GetInstructions(GeoCoordinate origin, GeoCoordinate destination)
     {
+        var ClosestStationToOrigin = GetClosestStation(origin);
+        var ClosestStationToDestination = GetClosestStation(destination);
+        var st = new string[2];
         var instructions = new List<string>();
-        instructions.AddRange(
-            GetInstructionsFromTo(new GeoCoordinate[] { o.geoCoordinate, station[0] }, "foot-walking"));
-        instructions.AddRange(GetInstructionsFromTo(new GeoCoordinate[] { station[0], station[1] }, "cycling-regular"));
-        instructions.AddRange(
-            GetInstructionsFromTo(new GeoCoordinate[] { station[1], d.geoCoordinate }, "foot-walking"));
+        GetInstructions("foot-walking", origin, ClosestStationToOrigin).ForEach(i => instructions.Add(i.ToString()));
+        GetInstructions("cycling-regular", ClosestStationToOrigin, ClosestStationToDestination).ForEach(i => instructions.Add(i.ToString()));
+        GetInstructions("foot-walking", ClosestStationToDestination, destination).ForEach(i => instructions.Add(i.ToString()));
         return instructions.ToArray();
     }
 
-    private static List<string> GetInstructionsFromTo(GeoCoordinate[] coordinates, string profile)
+    private static List<Instruction> GetInstructions(string profile, GeoCoordinate origin, GeoCoordinate destination)
     {
-        var instructions = new List<string>();
+        var instructions = new List<Instruction>();
         InstructionsClient.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
-        var response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile +
-                                                   "?api_key=" + ORS_API_KEY + "&start=" +
-                                                   getLongitudeLatitude(coordinates[0]) + "&end=" +
-                                                   getLongitudeLatitude(coordinates[1])).Result;
-        response.EnsureSuccessStatusCode();
-        var responseBody = response.Content.ReadAsStringAsync().Result;
+        var Response = InstructionsClient.GetAsync("https://api.openrouteservice.org/v2/directions/" + profile + "?api_key=" + ORS_API_KEY + "&start=" + GetCoord(origin) + "&end=" + GetCoord(destination)).Result;
+        Response.EnsureSuccessStatusCode();
+        var responseBody = Response.Content.ReadAsStringAsync().Result;
         var jsonParsed = JObject.Parse(responseBody);
         var features = JObject.Parse(responseBody.ToString()).GetValue("features")[0];
         var propert = JObject.Parse(features.ToString()).GetValue("properties");
@@ -56,27 +53,25 @@ public class LetsGoBiking : ILetsGoBiking
         {
             var text = step.GetValue("instruction").ToString();
             var distance = step.GetValue("distance").ToString();
-            var instruction = new Instruction(text, distance, new
-                GeoCoordinate((double)coords[i][0], (double)coords[i][1]));
-
-            instructions.Add(instruction.ToString());
+            instructions.Add(new Instruction(text, distance, new
+                GeoCoordinate((double)coords[i][0], (double)coords[i][1])));
             i++;
         }
 
         return instructions;
     }
 
-    private static string getLongitudeLatitude(GeoCoordinate g)
+    private static string GetCoord(GeoCoordinate g)
     {
         return g.Longitude.ToString().Replace(',', '.') + "," + g.Latitude.ToString().Replace(",", ".");
     }
 
-    private static Address CallOrsSearchApi(string addr)
+    private static GeoCoordinate CallOrsSearchApi(string addr)
     {
         Client.DefaultRequestHeaders.Add("User-Agent", "LetsGoBikingProject");
         var response = Client
             .GetAsync(
-                "https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf6248579351f552544be8b47824b1ed2034c5&text=" +
+                "https://api.openrouteservice.org/geocode/search?api_key=" + ORS_API_KEY + "&text=" +
                 addr).Result;
         response.EnsureSuccessStatusCode();
         var responseBody = response.Content.ReadAsStringAsync().Result;
@@ -87,21 +82,13 @@ public class LetsGoBiking : ILetsGoBiking
         var ville = JObject.Parse(propert.ToString()).GetValue("locality");
         var coord = JObject.Parse(geometry.ToString()).GetValue("coordinates");
         var geoCoordinate = new GeoCoordinate((double)coord[1], (double)coord[0]);
-        var address = new Address(ville.ToString(), geoCoordinate);
-        return address;
+        return geoCoordinate;
     }
 
-    public GeoCoordinate[] GetClosestStation(Address origin, Address destination)
+    public static GeoCoordinate GetClosestStation(GeoCoordinate geoCoordinate)
     {
         var proxyClient = new ProxyServiceClient();
-        Station closestToOrigin = proxyClient.ClosestStation(origin.geoCoordinate);
-        Station closestToDestionation = proxyClient.ClosestStation(destination.geoCoordinate);
-
-
-        var res = new GeoCoordinate[2];
-        res[0] = closestToOrigin.Coordinate;
-        res[1] = closestToDestionation.Coordinate;
-
-        return res;
+        Station closest = proxyClient.ClosestStation(geoCoordinate);
+        return closest.Coordinate;
     }
 }

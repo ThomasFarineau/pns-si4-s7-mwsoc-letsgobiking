@@ -130,7 +130,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
     <Compile Include="Connected Services\ProxyService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
